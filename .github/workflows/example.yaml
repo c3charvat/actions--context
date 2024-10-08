@@ -81,8 +81,6 @@ jobs:
 
   build-with-reusable-workflow-with-matrix-inputs:
     strategy:
-      # super important if you want to see all results, even if one fails
-      # fail-fast is true by default
       fail-fast: false
       matrix:
         inputs: [
@@ -99,10 +97,10 @@ jobs:
       input_1: ${{matrix.inputs.input_1}}
       workflow-context: build-with-reusable-workflow-with-matrix-inputs, ${{ toJSON(matrix) }}
 
-  build-with-reusable-workflow-with-matrix-max-parallel:
+  build-with-reusable-workflow-with-matrix-inputs-max-parallel:
     strategy:
-      max-parallel: 2
       fail-fast: false
+      max-parallel: 2
       matrix:
         inputs: [
           {id: '1', input_1: 'In_this_input_we_are_testing_very_very_very_long_strings', input_2: 'In_this_input_we_are_testing_very_very_very_long_strings'},
