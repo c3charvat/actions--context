@@ -44574,7 +44574,7 @@ function getAbsoluteJobName({ job, matrix, workflowContextChain }) {
         }
     }
     // If the job name is too long, github truncates it and adds an ellipsis
-    if (actualJobName.length > 97 && actualJobName.charAt(97) != ')') {
+    if (actualJobName.length > 100) {
         actualJobName = actualJobName.substring(0, 97) + '...';
     }
     workflowContextChain?.forEach((workflowContext) => {
@@ -44636,10 +44636,9 @@ async function getJobObject(octokit) {
         throw error;
     });
     const runnerName = getInput('runner-name', { required: true });
-    //In the case of truncated job name, the runner name was the only other way i could find to identify the job
-    // This still might produce a run that points to the wrong job, but it's the best I could do
+    //In the case of truncated job name the only other shared identifier is the runner name
     const currentJob = workflowRunJobs.filter((job) => job.name === absoluteJobName && job.status === "in_progress" && job.runner_name === runnerName);
-    if (!currentJob) {
+    if (currentJob.length === 0) {
         throw new Error(`Current job '${absoluteJobName}' could not be found in workflow run.\n` +
             'If this action is used within a reusable workflow, ensure that ' +
             'action input \'workflow-context\' is set to ${{ inputs.workflow-context }}' +
